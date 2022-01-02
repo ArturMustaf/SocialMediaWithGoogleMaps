@@ -22,27 +22,12 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void setButtonOnClickListener() {
         findViewById(R.id.buttonPrintProjectCreation).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(MainMenuActivity.this, PrintProjectCreationActivity.class));
-                    }
-                });
+                v -> startActivity(new Intent(MainMenuActivity.this, PrintProjectCreationActivity.class)));
 
         findViewById(R.id.buttonMaps).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(MainMenuActivity.this, MapsActivity.class));
-                    }
-                });
+                v -> startActivity(new Intent(MainMenuActivity.this, MapsActivity.class)));
 
         findViewById(R.id.buttonProfile).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(MainMenuActivity.this, ProfileActivity.class));
-                    }
-                });
+                v -> startActivity(new Intent(MainMenuActivity.this, ProfileActivity.class)));
     }
 }

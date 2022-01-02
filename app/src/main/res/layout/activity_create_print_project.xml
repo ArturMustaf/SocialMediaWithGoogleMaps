@@ -4,15 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PrintProjectCreationActivity"
-    android:paddingTop="40dp">
+    android:paddingTop="40dp"
+    tools:context=".PrintProjectCreationActivity">
 
     <LinearLayout
         android:layout_width="409dp"
         android:layout_height="729dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="41dp"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <EditText
@@ -20,40 +22,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textShortMessage"
-            android:hint="Project name"/>
+            android:hint="Project name"
+            android:inputType="textShortMessage" />
 
         <EditText
             android:id="@+id/editTextTextPrintProjectDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textMultiLine"
-            android:hint="Description (optional)"/>
+            android:hint="Description (optional)"
+            android:inputType="textMultiLine" />
 
         <EditText
             android:id="@+id/editTextTextSourceURL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textUri"
-            android:hint="File source (optional)"/>
+            android:hint="File source (optional)"
+            android:inputType="textUri" />
 
         <EditText
             android:id="@+id/editTextTextStartDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="date"
-            android:hint="When your print starts"/>
+            android:hint="When your print starts"
+            android:inputType="date" />
 
         <EditText
             android:id="@+id/editTextTextDuration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="number"
-            android:hint="Print duration in hours"/>
+            android:hint="Print duration in hours"
+            android:inputType="number" />
 
         <Button
             android:id="@+id/buttonCreateProject"
