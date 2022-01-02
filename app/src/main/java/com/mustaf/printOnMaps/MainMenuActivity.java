@@ -13,6 +13,8 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setTitle("Main menu");
+
         setContentView(R.layout.activity_main_menu);
 
         setButtonOnClickListener();
