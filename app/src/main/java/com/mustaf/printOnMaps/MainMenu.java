@@ -1,5 +1,6 @@
 package com.mustaf.printOnMaps;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -22,7 +23,7 @@ public class MainMenu extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        startActivity(new Intent(MainMenu.this, CreatePrintProject.class));
                     }
                 });
 
