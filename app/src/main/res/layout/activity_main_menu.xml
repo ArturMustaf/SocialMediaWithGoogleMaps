@@ -4,6 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="40dp"
+    android:paddingB="40dp"
     tools:context=".MainMenu">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/buttonNewProject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New 3D Project" />
+
+        <Button
+            android:id="@+id/buttonMaps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Open Maps" />
+
+        <Button
+            android:id="@+id/buttonProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Profile" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
