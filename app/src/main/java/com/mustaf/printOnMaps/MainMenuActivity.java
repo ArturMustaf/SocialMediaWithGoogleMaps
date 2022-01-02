@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainMenu extends AppCompatActivity {
+public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -19,11 +19,11 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void setButtonOnClickListener() {
-        findViewById(R.id.buttonNewProject).setOnClickListener(
+        findViewById(R.id.buttonPrintProjectCreation).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(MainMenu.this, CreatePrintProject.class));
+                        startActivity(new Intent(MainMenuActivity.this, PrintProjectCreationActivity.class));
                     }
                 });
 
