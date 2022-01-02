@@ -31,7 +31,7 @@ public class MainMenuActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        startActivity(new Intent(MainMenuActivity.this, MapsActivity.class));
                     }
                 });
 
@@ -39,7 +39,7 @@ public class MainMenuActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        startActivity(new Intent(MainMenuActivity.this, ProfileActivity.class));
                     }
                 });
     }
