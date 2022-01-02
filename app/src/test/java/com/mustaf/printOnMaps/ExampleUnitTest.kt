@@ -1,4 +1,4 @@
-package com.mustaf.myapplication
+package com.mustaf.printOnMaps
 
 import org.junit.Test
 
