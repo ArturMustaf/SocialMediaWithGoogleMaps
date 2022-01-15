@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 
+import lombok.var;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,7 +22,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     static final String TAG = MainMenuActivity.class.getSimpleName();
     static Retrofit retrofit = null;
-    static final String BASE_URL = "https://localhost:8080";
+    static final String BASE_URL = "http://localhost:8080";
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -55,13 +56,21 @@ public class MainMenuActivity extends AppCompatActivity {
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
-        PrintProjectApiService movieApiService = retrofit.create(PrintProjectApiService.class);
-        Call<List<PrintProject>> call = movieApiService.getAllPrintProjects();
+        PrintProjectApiService printProjectApiService = retrofit.create(PrintProjectApiService.class);
+        Call<List<PrintProject>> call = printProjectApiService.getAllPrintProjects();
         call.enqueue(new Callback<List<PrintProject>>() {
             @Override
             public void onResponse(Call<List<PrintProject>> call, Response<List<PrintProject>> response) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("GET print projects from server:\n");
+                for (var printProject: response.body()) {
+                    sb.append("Project: " + printProject.name +
+                            "\nDescription: " + printProject.description +
+                            "\nURL: " + printProject.sourceUrl);
+                    sb.append("\n---------------\n");
+                }
                 TextView tv = findViewById(R.id.textView);
-                tv.setText("ON RESPONSE");
+                tv.setText(sb.toString());
             }
             @Override
             public void onFailure(Call<List<PrintProject>> call, Throwable throwable) {

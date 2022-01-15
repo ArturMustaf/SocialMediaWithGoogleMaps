@@ -2,6 +2,7 @@ package com.mustaf.printOnMaps;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -13,5 +14,9 @@ public class ProfileActivity extends AppCompatActivity {
         setTitle("Profile Settings");
 
         setContentView(R.layout.activity_profile);
+
+        //findViewById(R.id.buttonPrintProjectCreation).setOnClickListener(
+              //  v -> startActivity(new Intent(MainMenuActivity.this, PrintProjectCreationActivity.class)));
+
     }
 }
