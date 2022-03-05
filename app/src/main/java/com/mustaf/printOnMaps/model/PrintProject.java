@@ -1,4 +1,4 @@
-package com.mustaf.printOnMaps;
+package com.mustaf.printOnMaps.model;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -8,10 +8,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class PrintProject {
+
     @SerializedName("name")
     public String name;
     @SerializedName("description")
     public String description;
     @SerializedName("sourceUrl")
     public String sourceUrl;
+
 }

@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -22,6 +23,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.mustaf.printOnMaps.databinding.ActivityMapsBinding;
+import com.mustaf.printOnMaps.model.Address;
+import com.mustaf.printOnMaps.model.PrintProject;
+
+import java.util.List;
+
+import lombok.var;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Maps SDK for Android Quickstart
@@ -32,6 +44,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
     private static final String TAG = MapsActivity.class.getSimpleName();
+    static Retrofit retrofit;
+    static final String BASE_URL = "http://localhost:8080";
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -64,6 +78,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         centerMapToUserPosition();
+        requestAddresses();
+    }
+
+    private void requestAddresses() {
+
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        PrintProjectApiService printProjectApiService = retrofit.create(PrintProjectApiService.class);
+        Call<List<Address>> call = printProjectApiService.getAllAddresses();
+        call.enqueue(new Callback<List<Address>>() {
+            @Override
+            public void onResponse(Call<List<Address>> call, Response<List<Address>> response) {
+                for (var address : response.body()) {
+
+                    Log.e(TAG, address.getAddress());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Address>> call, Throwable throwable) {
+                Log.e(TAG, throwable.toString());
+            }
+        });
     }
 
     /**

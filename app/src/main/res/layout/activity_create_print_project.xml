@@ -69,6 +69,11 @@
             android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
             />
 
+        <TextView
+            android:id="@+id/textViewPOST"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="data from server" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
