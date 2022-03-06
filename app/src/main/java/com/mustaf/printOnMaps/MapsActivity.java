@@ -19,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -95,8 +96,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onResponse(Call<List<Address>> call, Response<List<Address>> response) {
                 for (var address : response.body()) {
-
-                    Log.e(TAG, address.getAddress());
+                    var latLng = new LatLng(address.getLat(), address.getLng());
+                    mMap.addMarker(new MarkerOptions()
+                                    .position(latLng)
+                            .title(address.getAddress())
+                            .snippet("asdf1234 snippet"));
+                    Log.e(TAG, address.getAddress() + ", " + address.getLat() + ", " +  address.getLng());
                 }
             }
 
