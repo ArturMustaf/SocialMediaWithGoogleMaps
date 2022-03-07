@@ -16,4 +16,6 @@ public class Address {
     double lat;
     @SerializedName("lng")
     double lng;
+    @SerializedName("personId")
+    String personId;
 }

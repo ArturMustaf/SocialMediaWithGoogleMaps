@@ -94,6 +94,11 @@ public class SignInActivity extends AppCompatActivity implements
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            getSharedPreferences("userData", Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("personId", account.getId())
+                    .commit();
+
             // Signed in successfully, show authenticated UI.
             startActivity(new Intent(SignInActivity.this, MainMenuActivity.class));
         } catch (ApiException e) {

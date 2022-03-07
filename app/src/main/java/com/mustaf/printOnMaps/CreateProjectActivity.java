@@ -3,6 +3,7 @@ package com.mustaf.printOnMaps;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -66,8 +67,9 @@ public class CreateProjectActivity extends AppCompatActivity {
         // below line is to create an instance for our retrofit api class.
         PrintProjectApiService printProjectApiService = retrofit.create(PrintProjectApiService.class);
 
+        String personId = getSharedPreferences("userData",  Context.MODE_PRIVATE).getString("personId", "");
         // passing data from our text fields to our modal class
-        Address address = new Address(this.address, this.lat, this.lng);
+        Address address = new Address(this.address, this.lat, this.lng, personId);
 
         // calling a method to create a post and passing our modal class.
         Call<Address> call = printProjectApiService.createAddress(address);
