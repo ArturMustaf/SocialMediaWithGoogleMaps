@@ -30,12 +30,12 @@ public class SignInActivity extends AppCompatActivity implements
     private static final int RC_SIGN_IN = 9001;
 
     private GoogleSignInClient mGoogleSignInClient;
-    private TextView mStatusTextView;
+    //private TextView mStatusTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_signin);
+        setContentView(R.layout.activity_signin);
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
@@ -50,9 +50,9 @@ public class SignInActivity extends AppCompatActivity implements
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         // Set the dimensions of the sign-in button.
-        SignInButton signInButton = findViewById(R.id.sign_in_button);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
-        signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
+         SignInButton signInButton = findViewById(R.id.sign_in_button);
+         signInButton.setSize(SignInButton.SIZE_STANDARD);
+         signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class SignInActivity extends AppCompatActivity implements
     private void updateUI(@Nullable GoogleSignInAccount account) {
         if (account != null) {
         } else {
-            mStatusTextView.setText("Signed out");
+//            mStatusTextView.setText("Signed out");
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
         }
