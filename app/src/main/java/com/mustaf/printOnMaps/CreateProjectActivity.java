@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
@@ -26,9 +25,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.mustaf.printOnMaps.MainMenuActivity.retrofit;
 
-public class PrintProjectCreationActivity extends AppCompatActivity {
+public class CreateProjectActivity extends AppCompatActivity {
 
-    private static final String TAG = PrintProjectCreationActivity.class.getSimpleName();
+    private static final String TAG = CreateProjectActivity.class.getSimpleName();
     static final String BASE_URL = "http://localhost:8080";
     private String address;
     private double lat;
@@ -78,7 +77,7 @@ public class PrintProjectCreationActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Address> call, Response<Address> response) {
                 // this method is called when we get response from our api.
-                Toast.makeText(PrintProjectCreationActivity.this, "Data added to API", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateProjectActivity.this, "Data added to API", Toast.LENGTH_SHORT).show();
             }
 
             @Override

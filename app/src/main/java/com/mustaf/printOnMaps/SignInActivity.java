@@ -1,5 +1,6 @@
 package com.mustaf.printOnMaps;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -94,7 +95,7 @@ public class SignInActivity extends AppCompatActivity implements
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
-            updateUI(account);
+            startActivity(new Intent(SignInActivity.this, MainMenuActivity.class));
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -105,7 +106,6 @@ public class SignInActivity extends AppCompatActivity implements
 
     private void updateUI(@Nullable GoogleSignInAccount account) {
         if (account != null) {
-            startActivity(new Intent(SignInActivity.this, MainMenuActivity.class));
         } else {
             mStatusTextView.setText("Signed out");
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);

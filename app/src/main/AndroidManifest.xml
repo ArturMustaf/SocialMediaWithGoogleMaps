@@ -23,7 +23,7 @@
 
         <activity android:name=".ProfileActivity" />
         <activity android:name=".MapsActivity" />
-        <activity android:name=".PrintProjectCreationActivity" />
+        <activity android:name=".CreateProjectActivity" />
         <activity
             android:name=".SignInActivity"
             android:exported="true">
