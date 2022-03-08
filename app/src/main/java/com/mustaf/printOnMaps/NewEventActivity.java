@@ -17,14 +17,9 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.mustaf.printOnMaps.model.Event;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
-import java.util.Date;
 
 import lombok.var;
 import retrofit2.Call;
@@ -68,6 +63,11 @@ public class NewEventActivity extends AppCompatActivity {
     }
 
     private void postAddress() {
+        if (!isValidUserInput()) {
+            notifyUserErrors();
+            return;
+        }
+
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -101,12 +101,47 @@ public class NewEventActivity extends AppCompatActivity {
         });
     }
 
+    private void notifyUserErrors() {
+        if (address == null || address.isEmpty()) {
+            //todo
+        }
+        var eventName = ((EditText) findViewById(R.id.editTextEventName)).getText().toString();
+        if (eventName.isEmpty()) {
+            //todo
+        }
+        try {
+            LocalDate startDate = LocalDate.parse(((EditText) findViewById(R.id.editTextStartDate)).getText().toString());
+        } catch (DateTimeParseException e) {
+            //todo
+        }
+        try {
+            LocalDate endDate = LocalDate.parse(((EditText) findViewById(R.id.editTextEndDate)).getText().toString());
+        } catch (DateTimeParseException e) {
+            //todo
+        }
+    }
+
+    private boolean isValidUserInput() {
+        try {
+            var eventName = ((EditText) findViewById(R.id.editTextEventName)).getText().toString();
+            LocalDate startDate = LocalDate.parse(((EditText) findViewById(R.id.editTextStartDate)).getText().toString());
+            LocalDate endDate = LocalDate.parse(((EditText) findViewById(R.id.editTextEndDate)).getText().toString());
+            return address != null && !eventName.isEmpty();
+        } catch (DateTimeParseException e) {
+            Log.e(TAG, "parse exception thrown: " + ((EditText) findViewById(R.id.editTextStartDate)).getText().toString()
+                    + ", " + ((EditText) findViewById(R.id.editTextEndDate)).getText().toString());
+            return false;
+        }
+    }
+
     private Event createEventFromForm() {
         var personId = getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", "");
+        var name = ((EditText) findViewById(R.id.editTextEventName)).getText().toString();
         var startDateStr = ((EditText) findViewById(R.id.editTextStartDate)).getText().toString();
         var endDateStr = ((EditText) findViewById(R.id.editTextEndDate)).getText().toString();
 
-        return new Event(address,
+        return new Event(name,
+                address,
                 lat,
                 lng,
                 startDateStr,

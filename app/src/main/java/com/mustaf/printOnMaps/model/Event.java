@@ -15,6 +15,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Event {
 
+    @SerializedName("name")
+    String name;
     @SerializedName("address")
     String address;
     @SerializedName("lat")
