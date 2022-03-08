@@ -21,9 +21,9 @@ public class Event {
     double lat;
     @SerializedName("lng")
     double lng;
-    @SerializedName("personId")
+    @SerializedName("startDate")
     LocalDateTime startDate;
-    @SerializedName("personId")
+    @SerializedName("endDate")
     LocalDateTime endDate;
     @SerializedName("personId")
     String personId;
