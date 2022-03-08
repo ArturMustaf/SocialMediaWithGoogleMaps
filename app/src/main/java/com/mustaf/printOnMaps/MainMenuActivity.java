@@ -57,8 +57,8 @@ public class MainMenuActivity extends AppCompatActivity {
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
-        PrintProjectApiService printProjectApiService = retrofit.create(PrintProjectApiService.class);
-        Call<List<PrintProject>> call = printProjectApiService.getAllPrintProjects();
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<List<PrintProject>> call = apiService.getAllPrintProjects();
         call.enqueue(new Callback<List<PrintProject>>() {
             @Override
             public void onResponse(Call<List<PrintProject>> call, Response<List<PrintProject>> response) {

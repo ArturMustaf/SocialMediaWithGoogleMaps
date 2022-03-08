@@ -1,16 +1,12 @@
 package com.mustaf.printOnMaps;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -21,11 +17,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.mustaf.printOnMaps.databinding.ActivityMapsBinding;
-import com.mustaf.printOnMaps.model.Address;
-import com.mustaf.printOnMaps.model.PrintProject;
+import com.mustaf.printOnMaps.model.Event;
 
 import java.util.List;
 
@@ -90,11 +84,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
-        PrintProjectApiService printProjectApiService = retrofit.create(PrintProjectApiService.class);
-        Call<List<Address>> call = printProjectApiService.getAllAddresses();
-        call.enqueue(new Callback<List<Address>>() {
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<List<Event>> call = apiService.getAllEvents();
+        call.enqueue(new Callback<List<Event>>() {
             @Override
-            public void onResponse(Call<List<Address>> call, Response<List<Address>> response) {
+            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
                 for (var address : response.body()) {
                     var latLng = new LatLng(address.getLat(), address.getLng());
                     mMap.addMarker(new MarkerOptions()
@@ -106,7 +100,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             @Override
-            public void onFailure(Call<List<Address>> call, Throwable throwable) {
+            public void onFailure(Call<List<Event>> call, Throwable throwable) {
                 Log.e(TAG, throwable.toString());
             }
         });

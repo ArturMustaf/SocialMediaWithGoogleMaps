@@ -14,8 +14,10 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.mustaf.printOnMaps.model.Address;
+import com.mustaf.printOnMaps.model.Event;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import retrofit2.Call;
@@ -65,25 +67,27 @@ public class CreateProjectActivity extends AppCompatActivity {
         }
 
         // below line is to create an instance for our retrofit api class.
-        PrintProjectApiService printProjectApiService = retrofit.create(PrintProjectApiService.class);
+        ApiService apiService = retrofit.create(ApiService.class);
 
-        String personId = getSharedPreferences("userData",  Context.MODE_PRIVATE).getString("personId", "");
+        String personId = getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", "");
         // passing data from our text fields to our modal class
-        Address address = new Address(this.address, this.lat, this.lng, personId);
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime endDate = LocalDate.of(2022, 3, 10).atStartOfDay();
+        Event event = new Event(this.address, this.lat, this.lng, startDate, endDate, personId);
 
         // calling a method to create a post and passing our modal class.
-        Call<Address> call = printProjectApiService.createAddress(address);
+        Call<Event> call = apiService.createEvent(event);
 
         // on below line we are executing our method.
-        call.enqueue(new Callback<Address>() {
+        call.enqueue(new Callback<Event>() {
             @Override
-            public void onResponse(Call<Address> call, Response<Address> response) {
+            public void onResponse(Call<Event> call, Response<Event> response) {
                 // this method is called when we get response from our api.
                 Toast.makeText(CreateProjectActivity.this, "Data added to API", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onFailure(Call<Address> call, Throwable throwable) {
+            public void onFailure(Call<Event> call, Throwable throwable) {
                 Log.e(TAG, throwable.toString());
             }
         });

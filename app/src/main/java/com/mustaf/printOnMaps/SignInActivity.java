@@ -3,12 +3,11 @@ package com.mustaf.printOnMaps;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -16,8 +15,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.mustaf.printOnMaps.model.Event;
+import com.mustaf.printOnMaps.model.User;
+
+import java.util.List;
+
+import lombok.var;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
@@ -28,6 +39,8 @@ public class SignInActivity extends AppCompatActivity implements
 
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
+    static Retrofit retrofit;
+    static final String BASE_URL = "http://localhost:8080";
 
     private GoogleSignInClient mGoogleSignInClient;
     //private TextView mStatusTextView;
@@ -99,6 +112,19 @@ public class SignInActivity extends AppCompatActivity implements
                     .putString("personId", account.getId())
                     .commit();
 
+            User user = new User();
+            user.setGoogleAccId(account.getId());
+            user.setSurname(account.getFamilyName());
+            user.setName(account.getGivenName());
+            user.setEmail(account.getEmail());
+            user.setDisplayName(account.getDisplayName());
+            var photoUrl = account.getPhotoUrl();
+            if (photoUrl != null) {
+                user.setPhotoUrl(account.getPhotoUrl().toString());
+            }
+
+            postUser(user);
+
             // Signed in successfully, show authenticated UI.
             startActivity(new Intent(SignInActivity.this, MainMenuActivity.class));
         } catch (ApiException e) {
@@ -107,6 +133,29 @@ public class SignInActivity extends AppCompatActivity implements
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
             updateUI(null);
         }
+    }
+
+    private void postUser(User user) {
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<User> call = apiService.createUser(user);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                var user = response.body();
+                Log.d(TAG, "response of POST user: " + user.getGoogleAccId() + ", " + user.getDisplayName());
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable throwable) {
+                Log.e(TAG, throwable.toString());
+            }
+        });
     }
 
     private void updateUI(@Nullable GoogleSignInAccount account) {
