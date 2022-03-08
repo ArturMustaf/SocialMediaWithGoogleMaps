@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -16,10 +17,16 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.mustaf.printOnMaps.model.Event;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Date;
 
+import lombok.var;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,19 +35,26 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.mustaf.printOnMaps.MainMenuActivity.retrofit;
 
-public class CreateProjectActivity extends AppCompatActivity {
+public class NewEventActivity extends AppCompatActivity {
 
-    private static final String TAG = CreateProjectActivity.class.getSimpleName();
+    private static final String TAG = NewEventActivity.class.getSimpleName();
     static final String BASE_URL = "http://localhost:8080";
     private String address;
     private double lat;
     private double lng;
+    private Event event;
+
+    /*
+    private String address;
+    private double lat;
+    private double lng;
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("Create a new 3D project");
-        setContentView(R.layout.activity_create_print_project);
+        setContentView(R.layout.activity_event_creation);
         findViewById(R.id.buttonCreateProject).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -48,17 +62,12 @@ public class CreateProjectActivity extends AppCompatActivity {
                         postAddress();
                     }
                 }
-
         );
         initializePlaces();
         setupAutocompleteFragment();
     }
 
     private void postAddress() {
-        if (address == null) {
-            return;
-        }
-
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -66,14 +75,12 @@ public class CreateProjectActivity extends AppCompatActivity {
                     .build();
         }
 
+        Event event = createEventFromForm();
+
         // below line is to create an instance for our retrofit api class.
         ApiService apiService = retrofit.create(ApiService.class);
 
-        String personId = getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", "");
-        // passing data from our text fields to our modal class
-        LocalDateTime startDate = LocalDateTime.now();
-        LocalDateTime endDate = LocalDate.of(2022, 3, 10).atStartOfDay();
-        Event event = new Event(this.address, this.lat, this.lng, startDate, endDate, personId);
+        Log.e(TAG, "datess: " + event.getEndDate().toString() + " , " + event.getStartDate().toString());
 
         // calling a method to create a post and passing our modal class.
         Call<Event> call = apiService.createEvent(event);
@@ -83,14 +90,28 @@ public class CreateProjectActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Event> call, Response<Event> response) {
                 // this method is called when we get response from our api.
-                Toast.makeText(CreateProjectActivity.this, "Data added to API", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewEventActivity.this, "Data added to API", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<Event> call, Throwable throwable) {
+                Log.e(TAG, "test");
                 Log.e(TAG, throwable.toString());
             }
         });
+    }
+
+    private Event createEventFromForm() {
+        var personId = getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", "");
+        var startDateStr = ((EditText) findViewById(R.id.editTextStartDate)).getText().toString();
+        var endDateStr = ((EditText) findViewById(R.id.editTextEndDate)).getText().toString();
+
+        return new Event(address,
+                lat,
+                lng,
+                startDateStr,
+                endDateStr,
+                personId);
     }
 
     private void initializePlaces() {

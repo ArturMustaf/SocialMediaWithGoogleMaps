@@ -22,9 +22,9 @@ public class Event {
     @SerializedName("lng")
     double lng;
     @SerializedName("startDate")
-    LocalDateTime startDate;
+    String startDate;
     @SerializedName("endDate")
-    LocalDateTime endDate;
+    String endDate;
     @SerializedName("personId")
     String personId;
 }

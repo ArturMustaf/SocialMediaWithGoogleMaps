@@ -38,7 +38,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void setButtonOnClickListener() {
         findViewById(R.id.buttonPrintProjectCreation).setOnClickListener(
-                v -> startActivity(new Intent(MainMenuActivity.this, CreateProjectActivity.class)));
+                v -> startActivity(new Intent(MainMenuActivity.this, NewEventActivity.class)));
 
         findViewById(R.id.buttonMaps).setOnClickListener(
                 v -> startActivity(new Intent(MainMenuActivity.this, MapsActivity.class)));

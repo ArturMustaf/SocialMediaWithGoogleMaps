@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="40dp"
-    tools:context=".CreateProjectActivity">
+    tools:context=".NewEventActivity">
 
     <LinearLayout
         android:layout_width="409dp"
@@ -18,56 +18,56 @@
 
 
         <EditText
-            android:id="@+id/editTextTextPrintProjectName"
+            android:id="@+id/editTextEventName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Project name"
+            android:hint="Event name"
             android:inputType="textShortMessage" />
 
         <EditText
-            android:id="@+id/editTextTextPrintProjectDescription"
+            android:id="@+id/editTextStartDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Description (optional)"
-            android:inputType="textMultiLine" />
-
-        <EditText
-            android:id="@+id/editTextTextSourceURL"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="File source (optional)"
-            android:inputType="textUri" />
-
-        <EditText
-            android:id="@+id/editTextTextStartDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="When your print starts"
+            android:hint="Start date"
             android:inputType="date" />
 
         <EditText
-            android:id="@+id/editTextTextDuration"
+            android:id="@+id/editTextStartTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Print duration in hours"
-            android:inputType="number" />
+            android:hint="Start time"
+            android:inputType="time" />
+
+        <EditText
+            android:id="@+id/editTextEndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="End date"
+            android:inputType="date" />
+
+        <EditText
+            android:id="@+id/editTextEndTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="End time"
+            android:inputType="time" />
+
+        <fragment
+            android:id="@+id/autocomplete_fragment"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/buttonCreateProject"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Create Project" />
-
-        <fragment android:id="@+id/autocomplete_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-            />
 
         <TextView
             android:id="@+id/textViewPOST"
