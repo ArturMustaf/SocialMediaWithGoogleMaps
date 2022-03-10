@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -55,7 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Map<String, List<Marker>> markersByUserId;
 
     void addUserDataToMarker(String userId, Marker marker) {
-        ApiService apiService = retrofit.create(ApiService.class);
+        apiService = retrofit.create(ApiService.class);
         Call<User> call = apiService.getUserById(userId);
         call.enqueue(new Callback<User>() {
             @Override
@@ -124,7 +126,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (userIdOfMarker.isEmpty()) {
                     Log.e(TAG, "unknown user id");
                 }
-                addUserDataToMarker(userIdOfMarker, marker);
+                //addUserDataToMarker(userIdOfMarker, marker);
+                Intent startUserProfile = new Intent(MapsActivity.this, UserProfileActivity.class);
+                startUserProfile.putExtra("userId", userIdOfMarker);
+                startActivity(startUserProfile);
             }
         });
     }
@@ -145,10 +150,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     markersByUserId.get(event.getPersonId()).add(marker);
                 }
-                for (var entry: markersByUserId.entrySet()
-                     ) {
+                for (var entry: markersByUserId.entrySet()) {
                     Log.d(TAG, entry.getKey() + " : " + entry.getValue());
-
                 }
                 Log.d(TAG, "GET request successful");
             }
