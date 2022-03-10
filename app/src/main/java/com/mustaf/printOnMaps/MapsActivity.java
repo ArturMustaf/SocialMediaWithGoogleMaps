@@ -15,13 +15,20 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.mustaf.printOnMaps.databinding.ActivityMapsBinding;
 import com.mustaf.printOnMaps.model.Event;
+import com.mustaf.printOnMaps.model.User;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.var;
 import retrofit2.Call;
@@ -41,13 +48,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String TAG = MapsActivity.class.getSimpleName();
     static Retrofit retrofit;
     static final String BASE_URL = "http://localhost:8080";
+    ApiService apiService;
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private Map<String, List<Marker>> markersByUserId;
+
+    void addUserDataToMarker(String userId, Marker marker) {
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<User> call = apiService.getUserById(userId);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                var user = response.body();
+                marker.setSnippet(user.getEmail());
+                Log.d(TAG, "GET user request successful");
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable throwable) {
+                Log.e(TAG, throwable.toString());
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        apiService = retrofit.create(ApiService.class);
+
+        markersByUserId = new HashMap<>();
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -56,6 +93,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
     }
 
     /**
@@ -69,34 +107,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d("mytag", "onmapready");
+        Log.d(TAG, "onmapready");
         mMap = googleMap;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         centerMapToUserPosition();
-        requestAddresses();
+        requestData();
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(@NonNull @NotNull Marker marker) {
+                String userIdOfMarker = "";
+                for (var entry : markersByUserId.entrySet()) {
+                    if (entry.getValue().contains(marker)) {
+                        userIdOfMarker = entry.getKey();
+                    }
+                }
+                if (userIdOfMarker.isEmpty()) {
+                    Log.e(TAG, "unknown user id");
+                }
+                addUserDataToMarker(userIdOfMarker, marker);
+            }
+        });
     }
 
-    private void requestAddresses() {
-
-        if (retrofit == null) {
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-        }
-        ApiService apiService = retrofit.create(ApiService.class);
+    private void requestData() {
         Call<List<Event>> call = apiService.getAllEvents();
         call.enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
-                for (var address : response.body()) {
-                    var latLng = new LatLng(address.getLat(), address.getLng());
-                    mMap.addMarker(new MarkerOptions()
-                                    .position(latLng)
-                            .title(address.getAddress())
-                            .snippet("asdf1234 snippet"));
-                    Log.e(TAG, address.getAddress() + ", " + address.getLat() + ", " +  address.getLng());
+                for (var event : response.body()) {
+                    var latLng = new LatLng(event.getLat(), event.getLng());
+                    Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .title(event.getName()));
+                    var markers = markersByUserId.get(event.getPersonId());
+                    if (markers == null) {
+                        markersByUserId.put(event.getPersonId(), new ArrayList<>());
+                    }
+                    markersByUserId.get(event.getPersonId()).add(marker);
                 }
+                for (var entry: markersByUserId.entrySet()
+                     ) {
+                    Log.d(TAG, entry.getKey() + " : " + entry.getValue());
+
+                }
+                Log.d(TAG, "GET request successful");
             }
 
             @Override

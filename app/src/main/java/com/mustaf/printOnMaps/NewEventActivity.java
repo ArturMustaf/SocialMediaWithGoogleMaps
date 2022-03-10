@@ -39,12 +39,6 @@ public class NewEventActivity extends AppCompatActivity {
     private double lng;
     private Event event;
 
-    /*
-    private String address;
-    private double lat;
-    private double lng;
-     */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
