@@ -22,6 +22,8 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.mustaf.printOnMaps.model.Event;
 
 import java.time.LocalDate;
@@ -29,6 +31,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
 
+import lombok.val;
 import lombok.var;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +48,12 @@ public class NewEventActivity extends AppCompatActivity {
     private String address;
     private double lat;
     private double lng;
+    private String startDate;
+    private String endDate;
+    private int startTimeHour;
+    private int endTimeHour;
+    private int startTimeMinute;
+    private int endTimeMinute;
     private Event event;
     private static int AUTOCOMPLETE_REQUEST_CODE = 1;
 
@@ -54,19 +63,15 @@ public class NewEventActivity extends AppCompatActivity {
         setTitle("Create a new 3D project");
         setContentView(R.layout.activity_event_creation);
 
-        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
-        materialDateBuilder.setTitleText("Select a start date");
-        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
-        findViewById(R.id.pick_start_date_button).setOnClickListener(
-                v -> materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER")
-        );
-        materialDatePicker.addOnPositiveButtonClickListener(
-                selection -> ((TextView) findViewById(R.id.show_selected_start_date)).setText(materialDatePicker.getHeaderText()));
+        setupStartDate();
+        setupStartTime();
+        setupEndDate();
+        setupEndTime();
+
 
         findViewById(R.id.buttonCreateProject).setOnClickListener(
                 view -> postAddress()
         );
-
 
         List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
@@ -77,7 +82,74 @@ public class NewEventActivity extends AppCompatActivity {
         );
 
         initializePlaces();
-        setupAutocompleteFragment();
+    }
+
+    private void setupEndTime() {
+        MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .build();
+
+        materialTimePicker.addOnPositiveButtonClickListener(dialog -> {
+            endTimeHour = materialTimePicker.getHour();
+            endTimeMinute = materialTimePicker.getMinute();
+            var time = getFormattedTimeString(endTimeHour, endTimeMinute);
+            ((TextView) findViewById(R.id.show_selected_end_time)).setText(time);
+        });
+
+        findViewById(R.id.pick_end_time_button).setOnClickListener(
+                v -> materialTimePicker.show(getSupportFragmentManager(), "MATERIAL_TIME_PICKER")
+        );
+    }
+
+    private void setupStartTime() {
+        MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .build();
+
+        materialTimePicker.addOnPositiveButtonClickListener(dialog -> {
+            startTimeHour = materialTimePicker.getHour();
+            startTimeMinute = materialTimePicker.getMinute();
+            var time = getFormattedTimeString(startTimeHour, startTimeMinute);
+            ((TextView) findViewById(R.id.show_selected_start_time)).setText(time);
+        });
+
+        findViewById(R.id.pick_start_time_button).setOnClickListener(
+                v -> materialTimePicker.show(getSupportFragmentManager(), "MATERIAL_TIME_PICKER")
+        );
+    }
+
+    private String getFormattedTimeString(int endTimeHour, int endTimeMinute) {
+        return (endTimeHour < 10 ? "0" + endTimeHour : endTimeHour)
+                + ":"
+                + (endTimeMinute < 10 ? "0" + endTimeMinute : endTimeMinute);
+    }
+
+    private void setupEndDate() {
+        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDateBuilder.setTitleText("end date");
+        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+        findViewById(R.id.pick_end_date_button).setOnClickListener(
+                v -> materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER")
+        );
+        materialDatePicker.addOnPositiveButtonClickListener(
+                selection -> {
+                    ((TextView) findViewById(R.id.show_selected_end_date)).setText(materialDatePicker.getHeaderText());
+                    endDate = materialDatePicker.getHeaderText();
+                });
+    }
+
+    private void setupStartDate() {
+        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDateBuilder.setTitleText("start date");
+        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+        findViewById(R.id.pick_start_date_button).setOnClickListener(
+                v -> materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER")
+        );
+        materialDatePicker.addOnPositiveButtonClickListener(
+                selection -> {
+                    ((TextView) findViewById(R.id.show_selected_start_date)).setText(materialDatePicker.getHeaderText());
+                    startDate = materialDatePicker.getHeaderText();
+                });
     }
 
     @Override
@@ -101,10 +173,10 @@ public class NewEventActivity extends AppCompatActivity {
     }
 
     private void postAddress() {
-        if (!isValidUserInput()) {
+        /*if (!isValidUserInput()) {
             notifyUserErrors();
             return;
-        }
+        }*/
 
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
@@ -117,8 +189,6 @@ public class NewEventActivity extends AppCompatActivity {
 
         // below line is to create an instance for our retrofit api class.
         ApiService apiService = retrofit.create(ApiService.class);
-
-        Log.e(TAG, "date: " + event.getEndDate().toString() + " , " + event.getStartDate().toString());
 
         // calling a method to create a post and passing our modal class.
         Call<Event> call = apiService.createEvent(event);
@@ -161,6 +231,7 @@ public class NewEventActivity extends AppCompatActivity {
 
     private boolean isValidUserInput() {
         try {
+
             var eventName = ((EditText) findViewById(R.id.inputEventName)).getText().toString();
             LocalDate startDate = LocalDate.parse(((TextView) findViewById(R.id.show_selected_start_date)).getText().toString());
             LocalDate endDate = LocalDate.parse(((TextView) findViewById(R.id.show_selected_end_date)).getText().toString());
@@ -175,15 +246,13 @@ public class NewEventActivity extends AppCompatActivity {
     private Event createEventFromForm() {
         var personId = getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", "");
         var name = ((EditText) findViewById(R.id.inputEventName)).getText().toString();
-        var startDateStr = ((TextView) findViewById(R.id.show_selected_start_date)).getText().toString();
-        var endDateStr = ((TextView) findViewById(R.id.show_selected_end_date)).getText().toString();
 
         return new Event(name,
                 address,
                 lat,
                 lng,
-                startDateStr,
-                endDateStr,
+                startDate,
+                endDate,
                 personId);
     }
 

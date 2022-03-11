@@ -123,7 +123,7 @@
             android:layout_below="@id/pick_end_time_button"
             android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"
-            android:text="Select an Address"
+            android:text="Select address"
             app:cornerRadius="100dp" />
 
         <com.google.android.material.button.MaterialButton
