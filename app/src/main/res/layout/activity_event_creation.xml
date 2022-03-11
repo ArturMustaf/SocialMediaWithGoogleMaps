@@ -112,6 +112,7 @@
             android:layout_below="@id/pick_end_time_button"
             android:layout_marginTop="20dp"
             android:text="Address"
+            android:maxWidth="180dp"
             android:textSize="18sp" />
 
         <Button
@@ -130,11 +131,8 @@
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/address_button"
-            android:layout_marginTop="40dp"
+            android:layout_alignParentBottom="true"
             android:text="Create Event"
             app:cornerRadius="100dp" />
-
-
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

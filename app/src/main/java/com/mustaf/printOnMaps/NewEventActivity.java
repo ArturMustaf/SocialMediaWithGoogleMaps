@@ -1,6 +1,7 @@
 package com.mustaf.printOnMaps;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -16,6 +17,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -44,6 +46,7 @@ public class NewEventActivity extends AppCompatActivity {
     private double lat;
     private double lng;
     private Event event;
+    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +68,36 @@ public class NewEventActivity extends AppCompatActivity {
         );
 
 
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+        List<Place.Field> fields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG);
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
                 .build(this);
 
         findViewById(R.id.address_button).setOnClickListener(
-                v -> startActivityForResult(intent, 1)
+                v -> startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
         );
 
         initializePlaces();
         setupAutocompleteFragment();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                address = place.getAddress();
+                lat = place.getLatLng().latitude;
+                lng = place.getLatLng().longitude;
+                ((TextView) findViewById(R.id.show_selected_address)).setText(address);
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i(TAG, status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void postAddress() {
