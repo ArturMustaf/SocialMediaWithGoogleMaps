@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -15,6 +16,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.mustaf.printOnMaps.model.Event;
 
 import java.time.LocalDate;
@@ -44,13 +46,18 @@ public class NewEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTitle("Create a new 3D project");
         setContentView(R.layout.activity_event_creation);
+
+        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDateBuilder.setTitleText("Select a start date");
+        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+        findViewById(R.id.pick_start_date_button).setOnClickListener(
+                v -> materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER")
+        );
+        materialDatePicker.addOnPositiveButtonClickListener(
+                selection -> ((TextView) findViewById(R.id.show_selected_start_date)).setText(materialDatePicker.getHeaderText()));
+
         findViewById(R.id.buttonCreateProject).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        postAddress();
-                    }
-                }
+                view -> postAddress()
         );
         initializePlaces();
         setupAutocompleteFragment();
@@ -74,7 +81,7 @@ public class NewEventActivity extends AppCompatActivity {
         // below line is to create an instance for our retrofit api class.
         ApiService apiService = retrofit.create(ApiService.class);
 
-        Log.e(TAG, "datess: " + event.getEndDate().toString() + " , " + event.getStartDate().toString());
+        Log.e(TAG, "date: " + event.getEndDate().toString() + " , " + event.getStartDate().toString());
 
         // calling a method to create a post and passing our modal class.
         Call<Event> call = apiService.createEvent(event);
@@ -99,17 +106,17 @@ public class NewEventActivity extends AppCompatActivity {
         if (address == null || address.isEmpty()) {
             //todo
         }
-        var eventName = ((EditText) findViewById(R.id.editTextEventName)).getText().toString();
+        var eventName = ((EditText) findViewById(R.id.inputEventName)).getText().toString();
         if (eventName.isEmpty()) {
             //todo
         }
         try {
-            LocalDate startDate = LocalDate.parse(((EditText) findViewById(R.id.editTextStartDate)).getText().toString());
+            LocalDate startDate = LocalDate.parse(((TextView) findViewById(R.id.show_selected_start_date)).getText().toString());
         } catch (DateTimeParseException e) {
             //todo
         }
         try {
-            LocalDate endDate = LocalDate.parse(((EditText) findViewById(R.id.editTextEndDate)).getText().toString());
+            LocalDate endDate = LocalDate.parse(((TextView) findViewById(R.id.show_selected_end_date)).getText().toString());
         } catch (DateTimeParseException e) {
             //todo
         }
@@ -117,22 +124,22 @@ public class NewEventActivity extends AppCompatActivity {
 
     private boolean isValidUserInput() {
         try {
-            var eventName = ((EditText) findViewById(R.id.editTextEventName)).getText().toString();
-            LocalDate startDate = LocalDate.parse(((EditText) findViewById(R.id.editTextStartDate)).getText().toString());
-            LocalDate endDate = LocalDate.parse(((EditText) findViewById(R.id.editTextEndDate)).getText().toString());
+            var eventName = ((EditText) findViewById(R.id.inputEventName)).getText().toString();
+            LocalDate startDate = LocalDate.parse(((TextView) findViewById(R.id.show_selected_start_date)).getText().toString());
+            LocalDate endDate = LocalDate.parse(((TextView) findViewById(R.id.show_selected_end_date)).getText().toString());
             return address != null && !eventName.isEmpty();
         } catch (DateTimeParseException e) {
-            Log.e(TAG, "parse exception thrown: " + ((EditText) findViewById(R.id.editTextStartDate)).getText().toString()
-                    + ", " + ((EditText) findViewById(R.id.editTextEndDate)).getText().toString());
+            Log.e(TAG, "parse exception thrown: " + ((TextView) findViewById(R.id.show_selected_start_date)).getText().toString()
+                    + ", " + ((TextView) findViewById(R.id.show_selected_end_date)).getText().toString());
             return false;
         }
     }
 
     private Event createEventFromForm() {
         var personId = getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", "");
-        var name = ((EditText) findViewById(R.id.editTextEventName)).getText().toString();
-        var startDateStr = ((EditText) findViewById(R.id.editTextStartDate)).getText().toString();
-        var endDateStr = ((EditText) findViewById(R.id.editTextEndDate)).getText().toString();
+        var name = ((EditText) findViewById(R.id.inputEventName)).getText().toString();
+        var startDateStr = ((TextView) findViewById(R.id.show_selected_start_date)).getText().toString();
+        var endDateStr = ((TextView) findViewById(R.id.show_selected_end_date)).getText().toString();
 
         return new Event(name,
                 address,
