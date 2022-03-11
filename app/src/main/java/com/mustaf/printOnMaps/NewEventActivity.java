@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,14 +15,17 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.mustaf.printOnMaps.model.Event;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.List;
 
 import lombok.var;
 import retrofit2.Call;
@@ -59,6 +63,16 @@ public class NewEventActivity extends AppCompatActivity {
         findViewById(R.id.buttonCreateProject).setOnClickListener(
                 view -> postAddress()
         );
+
+
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                .build(this);
+
+        findViewById(R.id.address_button).setOnClickListener(
+                v -> startActivityForResult(intent, 1)
+        );
+
         initializePlaces();
         setupAutocompleteFragment();
     }
@@ -157,7 +171,7 @@ public class NewEventActivity extends AppCompatActivity {
         }
     }
 
-    private void setupAutocompleteFragment() {
+    private void setupAutocompleteFragment() {/*
         // Initialize the AutocompleteSupportFragment.
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
@@ -179,7 +193,7 @@ public class NewEventActivity extends AppCompatActivity {
             public void onError(@NonNull Status status) {
                 Log.i(TAG, "An error occurred: " + status);
             }
-        });
+        });*/
     }
 
 

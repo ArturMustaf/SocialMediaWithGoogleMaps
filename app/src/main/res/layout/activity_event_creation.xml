@@ -30,8 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/editTextEventName"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
             android:text="Start date"
             android:textSize="18sp" />
 
@@ -52,6 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/pick_start_date_button"
             android:text="Start time"
+            android:layout_marginTop="10dp"
             android:textSize="18sp" />
 
         <Button
@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/pick_start_time_button"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:text="End date"
             android:textSize="18sp" />
 
@@ -90,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/pick_end_date_button"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:text="Start time"
             android:textSize="18sp" />
 
@@ -105,132 +105,36 @@
             android:text="Select end time"
             app:cornerRadius="100dp" />
 
-        <fragment
-            android:id="@+id/autocomplete_fragment"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/show_selected_address"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/pick_end_time_button"
+            android:layout_marginTop="20dp"
+            android:text="Address"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/address_button"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pick_end_time_button"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"
-            />
+            android:text="Select an Address"
+            app:cornerRadius="100dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonCreateProject"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/autocomplete_fragment"
+            android:layout_below="@id/address_button"
             android:layout_marginTop="40dp"
             android:text="Create Event"
             app:cornerRadius="100dp" />
+
+
     </RelativeLayout>
-
-    <!--
-        <LinearLayout
-            android:layout_width="409dp"
-            android:layout_height="729dp"
-            android:layout_marginStart="1dp"
-            android:layout_marginTop="41dp"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputEventName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:ems="10"
-                android:hint="Event name">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/password_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.textfield.TextInputLayout>
-            -->
-
-    <!--
-
-        <Button
-            android:id="@+id/buttonStartDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:text="Select start date" />
-
-        <TextView
-            android:id="@+id/inputStartDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:ems="10"
-            android:hint="Start date">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextStartDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </TextView>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputEndDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:ems="10"
-            android:hint="Start date">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextEndDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <EditText
-            android:id="@+id/editTextStartDate2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Start date"
-            android:inputType="date" />
-
-        <EditText
-            android:id="@+id/editTextStartTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Start time"
-            android:inputType="time" />
-
-        <EditText
-            android:id="@+id/editTextEndDate2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="End date"
-            android:inputType="date" />
-
-        <EditText
-            android:id="@+id/editTextEndTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="End time"
-            android:inputType="time" />
-
-        <fragment
-            android:id="@+id/autocomplete_fragment"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/buttonCreateProject"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Create Project" />
-    </LinearLayout>
-            -->
-
 </androidx.constraintlayout.widget.ConstraintLayout>
