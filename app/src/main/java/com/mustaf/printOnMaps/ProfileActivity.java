@@ -24,10 +24,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-
-        //findViewById(R.id.buttonPrintProjectCreation).setOnClickListener(
-        //  v -> startActivity(new Intent(MainMenuActivity.this, PrintProjectCreationActivity.class)));
-
     }
 
     private void setupTabLayout() {

@@ -25,8 +25,16 @@ public class Event {
     double lng;
     @SerializedName("startDate")
     String startDate;
+    @SerializedName("startTimeHour")
+    int startTimeHour;
+    @SerializedName("startTimeMinute")
+    int startTimeMinute;
     @SerializedName("endDate")
     String endDate;
+    @SerializedName("endTimeHour")
+    int endTimeHour;
+    @SerializedName("endTimeMinute")
+    int endTimeMinute;
     @SerializedName("personId")
     String personId;
 }

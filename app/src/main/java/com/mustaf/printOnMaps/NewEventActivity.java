@@ -246,7 +246,7 @@ public class NewEventActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Event> call, Response<Event> response) {
                 // this method is called when we get response from our api.
-                Toast.makeText(NewEventActivity.this, "Data added to API", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewEventActivity.this, "New event created!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -300,7 +300,11 @@ public class NewEventActivity extends AppCompatActivity {
                 lat,
                 lng,
                 startDate,
+                startTimeHour,
+                startTimeMinute,
                 endDate,
+                endTimeHour,
+                endTimeMinute,
                 personId);
     }
 
