@@ -26,10 +26,14 @@ import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.mustaf.printOnMaps.model.Event;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import lombok.val;
 import lombok.var;
@@ -68,7 +72,6 @@ public class NewEventActivity extends AppCompatActivity {
         setupEndDate();
         setupEndTime();
 
-
         findViewById(R.id.buttonCreateProject).setOnClickListener(
                 view -> postAddress()
         );
@@ -84,21 +87,20 @@ public class NewEventActivity extends AppCompatActivity {
         initializePlaces();
     }
 
-    private void setupEndTime() {
-        MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .build();
-
-        materialTimePicker.addOnPositiveButtonClickListener(dialog -> {
-            endTimeHour = materialTimePicker.getHour();
-            endTimeMinute = materialTimePicker.getMinute();
-            var time = getFormattedTimeString(endTimeHour, endTimeMinute);
-            ((TextView) findViewById(R.id.show_selected_end_time)).setText(time);
-        });
-
-        findViewById(R.id.pick_end_time_button).setOnClickListener(
-                v -> materialTimePicker.show(getSupportFragmentManager(), "MATERIAL_TIME_PICKER")
+    private void setupStartDate() {
+        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDateBuilder.setTitleText("start date");
+        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+        findViewById(R.id.pick_start_date_button).setOnClickListener(
+                v -> materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER")
         );
+        materialDatePicker.addOnPositiveButtonClickListener(
+                selection -> {
+                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                    calendar.setTimeInMillis((long) selection);
+                    ((TextView) findViewById(R.id.show_selected_start_date)).setText(materialDatePicker.getHeaderText());
+                    startDate = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_WEEK)).toString();
+                });
     }
 
     private void setupStartTime() {
@@ -118,12 +120,6 @@ public class NewEventActivity extends AppCompatActivity {
         );
     }
 
-    private String getFormattedTimeString(int endTimeHour, int endTimeMinute) {
-        return (endTimeHour < 10 ? "0" + endTimeHour : endTimeHour)
-                + ":"
-                + (endTimeMinute < 10 ? "0" + endTimeMinute : endTimeMinute);
-    }
-
     private void setupEndDate() {
         MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
         materialDateBuilder.setTitleText("end date");
@@ -133,23 +129,34 @@ public class NewEventActivity extends AppCompatActivity {
         );
         materialDatePicker.addOnPositiveButtonClickListener(
                 selection -> {
+                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                    calendar.setTimeInMillis((long) selection);
                     ((TextView) findViewById(R.id.show_selected_end_date)).setText(materialDatePicker.getHeaderText());
-                    endDate = materialDatePicker.getHeaderText();
+                    endDate = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_WEEK)).toString();
                 });
     }
 
-    private void setupStartDate() {
-        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
-        materialDateBuilder.setTitleText("start date");
-        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
-        findViewById(R.id.pick_start_date_button).setOnClickListener(
-                v -> materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER")
+    private void setupEndTime() {
+        MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .build();
+
+        materialTimePicker.addOnPositiveButtonClickListener(dialog -> {
+            endTimeHour = materialTimePicker.getHour();
+            endTimeMinute = materialTimePicker.getMinute();
+            var time = getFormattedTimeString(endTimeHour, endTimeMinute);
+            ((TextView) findViewById(R.id.show_selected_end_time)).setText(time);
+        });
+
+        findViewById(R.id.pick_end_time_button).setOnClickListener(
+                v -> materialTimePicker.show(getSupportFragmentManager(), "MATERIAL_TIME_PICKER")
         );
-        materialDatePicker.addOnPositiveButtonClickListener(
-                selection -> {
-                    ((TextView) findViewById(R.id.show_selected_start_date)).setText(materialDatePicker.getHeaderText());
-                    startDate = materialDatePicker.getHeaderText();
-                });
+    }
+
+    private String getFormattedTimeString(int endTimeHour, int endTimeMinute) {
+        return (endTimeHour < 10 ? "0" + endTimeHour : endTimeHour)
+                + ":"
+                + (endTimeMinute < 10 ? "0" + endTimeMinute : endTimeMinute);
     }
 
     @Override
@@ -173,10 +180,10 @@ public class NewEventActivity extends AppCompatActivity {
     }
 
     private void postAddress() {
-        /*if (!isValidUserInput()) {
-            notifyUserErrors();
-            return;
-        }*/
+        //if (!isValidUserInput()) {
+        //  notifyUserErrors();
+        //return;
+        //}
 
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
@@ -231,12 +238,12 @@ public class NewEventActivity extends AppCompatActivity {
 
     private boolean isValidUserInput() {
         try {
-
-            var eventName = ((EditText) findViewById(R.id.inputEventName)).getText().toString();
+            var eventName = ((TextView) findViewById(R.id.inputEventName)).getText().toString();
             LocalDate startDate = LocalDate.parse(((TextView) findViewById(R.id.show_selected_start_date)).getText().toString());
             LocalDate endDate = LocalDate.parse(((TextView) findViewById(R.id.show_selected_end_date)).getText().toString());
             return address != null && !eventName.isEmpty();
-        } catch (DateTimeParseException e) {
+            //} catch (DateTimeParseException e) {
+        } catch (Exception e) {
             Log.e(TAG, "parse exception thrown: " + ((TextView) findViewById(R.id.show_selected_start_date)).getText().toString()
                     + ", " + ((TextView) findViewById(R.id.show_selected_end_date)).getText().toString());
             return false;
@@ -245,7 +252,7 @@ public class NewEventActivity extends AppCompatActivity {
 
     private Event createEventFromForm() {
         var personId = getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", "");
-        var name = ((EditText) findViewById(R.id.inputEventName)).getText().toString();
+        var name = ((TextView) findViewById(R.id.editTextEventName)).getText().toString();
 
         return new Event(name,
                 address,
