@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
 import com.mustaf.printOnMaps.databinding.ActivityMapsBinding;
 import com.mustaf.printOnMaps.model.Event;
 import com.mustaf.printOnMaps.model.User;
@@ -74,6 +75,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    private void setupTabLayout() {
+        var tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Intent intent;
+                switch (tab.getPosition()) {
+                    case 0:
+                        intent = new Intent(MapsActivity.this, MainMenuActivity.class);
+                        break;
+                    case 1:
+                        intent = new Intent(MapsActivity.this, NewEventActivity.class);
+                        break;
+                    case 3:
+                        intent = new Intent(MapsActivity.this, ProfileActivity.class);
+                        break;
+                    default:
+                        return;
+                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+        TabLayout.Tab activeTab = tabLayout.getTabAt(2);
+        tabLayout.selectTab(activeTab);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +126,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setupTabLayout();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

@@ -6,8 +6,10 @@ import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.tabs.TabLayout;
 import com.mustaf.printOnMaps.model.PrintProject;
 
 import java.util.List;
@@ -34,6 +36,46 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
 
         setButtonOnClickListener();
+
+        setupTabLayout();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+    }
+
+    private void setupTabLayout() {
+        var tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Intent intent;
+                switch (tab.getPosition()) {
+                    case 1:
+                        intent = new Intent(MainMenuActivity.this, NewEventActivity.class);
+                        break;
+                    case 2:
+                        intent = new Intent(MainMenuActivity.this, MapsActivity.class);
+                        break;
+                    case 3:
+                        intent = new Intent(MainMenuActivity.this, ProfileActivity.class);
+                        break;
+                    default:
+                        return;
+                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+        TabLayout.Tab activeTab = tabLayout.getTabAt(0);
+        tabLayout.selectTab(activeTab);
     }
 
     private void setButtonOnClickListener() {
@@ -45,11 +87,8 @@ public class MainMenuActivity extends AppCompatActivity {
 
         findViewById(R.id.buttonProfile).setOnClickListener(
                 v -> startActivity(new Intent(MainMenuActivity.this, ProfileActivity.class)));
-
-        findViewById(R.id.buttonGET).setOnClickListener(
-                v -> connect());
     }
-
+/*
     private void connect() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
@@ -70,13 +109,11 @@ public class MainMenuActivity extends AppCompatActivity {
                             "\nURL: " + printProject.sourceUrl);
                     sb.append("\n---------------\n");
                 }
-                TextView tv = findViewById(R.id.textView);
-                tv.setText(sb.toString());
             }
             @Override
             public void onFailure(Call<List<PrintProject>> call, Throwable throwable) {
                 Log.e(TAG, throwable.toString());
             }
         });
-    }
+    }*/
 }

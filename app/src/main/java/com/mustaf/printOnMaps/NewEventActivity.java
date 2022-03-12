@@ -2,6 +2,7 @@ package com.mustaf.printOnMaps;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -22,6 +23,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.mustaf.printOnMaps.model.Event;
@@ -64,13 +66,15 @@ public class NewEventActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Create a new 3D project");
+        setTitle("What are you planning?");
         setContentView(R.layout.activity_event_creation);
 
         setupStartDate();
         setupStartTime();
         setupEndDate();
         setupEndTime();
+
+        setupTabLayout();
 
         findViewById(R.id.buttonCreateProject).setOnClickListener(
                 view -> postAddress()
@@ -85,6 +89,43 @@ public class NewEventActivity extends AppCompatActivity {
         );
 
         initializePlaces();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+    }
+
+    private void setupTabLayout() {
+        var tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Intent intent;
+                switch (tab.getPosition()) {
+                    case 0:
+                        intent = new Intent(NewEventActivity.this, MainMenuActivity.class);
+                        break;
+                    case 2:
+                        intent = new Intent(NewEventActivity.this, MapsActivity.class);
+                        break;
+                    case 3:
+                        intent = new Intent(NewEventActivity.this, ProfileActivity.class);
+                        break;
+                    default:
+                        return;
+                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+        TabLayout.Tab activeTab = tabLayout.getTabAt(1);
+        tabLayout.selectTab(activeTab);
     }
 
     private void setupStartDate() {
