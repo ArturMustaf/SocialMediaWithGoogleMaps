@@ -1,39 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ProfileActivity">
 
-    <LinearLayout
+    <include layout="@layout/tab_layout" />
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <include
-            layout="@layout/tab_layout" />
-
-        <EditText
-            android:id="@+id/editTextTextPersonName"
-            android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_marginTop="90dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/user_pic"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:maxWidth="100dp"
+            android:layout_marginTop="20dp"
+            android:maxHeight="100dp" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/show_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Name" />
-
-        <EditText
-            android:id="@+id/editTextTextEmailAddress"
-            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/user_pic"
+            android:textSize="18sp"
+            />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/show_surname"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            android:hint="Email Address" />
-
-        <Button
-            android:id="@+id/buttonCreateProject"
-            android:layout_width="match_parent"
+            android:layout_below="@id/show_name"
+            android:layout_marginTop="20dp"
+            android:textSize="18sp" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/show_email"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save Settings" />
+            android:layout_below="@id/show_surname"
+            android:layout_marginTop="20dp"
+            android:textSize="18sp" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/show_photo_url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/show_email"
+            android:layout_marginTop="20dp"
+            android:textSize="18sp" />
 
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_email"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="35dp"
+                app:srcCompat="@drawable/baseline_email_white_24"
+                android:backgroundTint="@color/purple_500"
+                app:tint="@android:color/white"
+                />
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout >

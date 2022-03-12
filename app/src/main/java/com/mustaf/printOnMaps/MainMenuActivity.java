@@ -35,8 +35,6 @@ public class MainMenuActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main_menu);
 
-        setButtonOnClickListener();
-
         setupTabLayout();
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
@@ -76,17 +74,6 @@ public class MainMenuActivity extends AppCompatActivity {
         });
         TabLayout.Tab activeTab = tabLayout.getTabAt(0);
         tabLayout.selectTab(activeTab);
-    }
-
-    private void setButtonOnClickListener() {
-        findViewById(R.id.buttonPrintProjectCreation).setOnClickListener(
-                v -> startActivity(new Intent(MainMenuActivity.this, NewEventActivity.class)));
-
-        findViewById(R.id.buttonMaps).setOnClickListener(
-                v -> startActivity(new Intent(MainMenuActivity.this, MapsActivity.class)));
-
-        findViewById(R.id.buttonProfile).setOnClickListener(
-                v -> startActivity(new Intent(MainMenuActivity.this, ProfileActivity.class)));
     }
 /*
     private void connect() {

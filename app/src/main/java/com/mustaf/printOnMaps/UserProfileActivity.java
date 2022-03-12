@@ -58,7 +58,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 Log.e(TAG, throwable.toString());
             }
         });
-
     }
 
     private void fillUserDetails() {

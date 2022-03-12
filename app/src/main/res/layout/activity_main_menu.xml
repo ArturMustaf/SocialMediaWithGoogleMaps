@@ -5,22 +5,4 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
         <include
             layout="@layout/tab_layout" />
-        <Button
-            android:id="@+id/buttonPrintProjectCreation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Plan a new event"
-            />
-
-        <Button
-            android:id="@+id/buttonMaps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="View all events" />
-
-        <Button
-            android:id="@+id/buttonProfile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Your profile" />
     </LinearLayout>
