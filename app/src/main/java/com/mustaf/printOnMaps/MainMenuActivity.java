@@ -2,7 +2,18 @@ package com.mustaf.printOnMaps;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -10,8 +21,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.tabs.TabLayout;
+import com.mustaf.printOnMaps.model.Event;
 import com.mustaf.printOnMaps.model.PrintProject;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.var;
@@ -26,6 +43,8 @@ public class MainMenuActivity extends AppCompatActivity {
     static final String TAG = MainMenuActivity.class.getSimpleName();
     static Retrofit retrofit = null;
     static final String BASE_URL = "http://localhost:8080";
+    List<Event> eventsList;
+    ArrayAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -39,6 +58,7 @@ public class MainMenuActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        getAllEvents();
     }
 
     private void setupTabLayout() {
@@ -75,8 +95,9 @@ public class MainMenuActivity extends AppCompatActivity {
         TabLayout.Tab activeTab = tabLayout.getTabAt(0);
         tabLayout.selectTab(activeTab);
     }
-/*
-    private void connect() {
+
+
+    private void getAllEvents() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -84,23 +105,57 @@ public class MainMenuActivity extends AppCompatActivity {
                     .build();
         }
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<List<PrintProject>> call = apiService.getAllPrintProjects();
-        call.enqueue(new Callback<List<PrintProject>>() {
+        Call<List<Event>> call = apiService.getAllEvents();
+        call.enqueue(new Callback<List<Event>>() {
             @Override
-            public void onResponse(Call<List<PrintProject>> call, Response<List<PrintProject>> response) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("GET print projects from server:\n");
-                for (var printProject: response.body()) {
-                    sb.append("Project: " + printProject.name +
-                            "\nDescription: " + printProject.description +
-                            "\nURL: " + printProject.sourceUrl);
-                    sb.append("\n---------------\n");
-                }
+            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
+                Log.d(TAG, "onResponse");
+                eventsList = response.body();
+                showEvents();
             }
             @Override
-            public void onFailure(Call<List<PrintProject>> call, Throwable throwable) {
+            public void onFailure(Call<List<Event>> call, Throwable throwable) {
+                Log.e(TAG, "onFailure");
                 Log.e(TAG, throwable.toString());
             }
         });
-    }*/
+    }
+
+
+    private void showEvents() {
+        List<String> list = new ArrayList<>();
+
+        for (var event: eventsList) {
+            LocalDateTime startDate = LocalDateTime.parse(event.getStartDate());
+            String startDateFormatString = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(startDate);
+
+            LocalDateTime endDate = LocalDateTime.parse(event.getEndDate());
+            String endDateFormatString = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(endDate);
+
+            String startTime = (event.getStartTimeHour() < 10 ? "0" + event.getStartTimeHour() : event.getStartTimeHour())
+                    + ":" + (event.getStartTimeMinute() < 10 ? "0" + event.getStartTimeMinute() : event.getStartTimeMinute());
+
+            String endTime = (event.getEndTimeHour() < 10 ? "0" + event.getEndTimeHour() : event.getEndTimeHour())
+                    + ":" + (event.getEndTimeMinute() < 10 ? "0" + event.getEndTimeMinute() : event.getEndTimeMinute());
+
+
+            String listItem = "\n" + event.getName() + "\n\n"
+                    + "from: "+ startDateFormatString + "   "
+                    + startTime + "\n"
+                    + "until: "+ endDateFormatString + "   "
+                    + endTime + "\n\n"
+                    + event.getAddress() + "\n";
+            list.add(listItem);
+        }
+
+         adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1,
+                 list);
+
+        ListView listView = (ListView) findViewById(R.id.list_view);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+
+        });
+    }
 }

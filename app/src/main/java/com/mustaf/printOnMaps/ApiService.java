@@ -13,8 +13,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface ApiService {
-    @GET("/print-projects")
-    Call<List<PrintProject>> getAllPrintProjects();
     @GET("/events")
     Call<List<Event>> getAllEvents();
     @POST("/events")
