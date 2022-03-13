@@ -52,7 +52,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     static final String BASE_URL = "http://localhost:8080";
     ApiService apiService;
 
-    // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Map<String, List<Marker>> markersByUserId;
 
@@ -134,24 +133,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onmapready");
         mMap = googleMap;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        /*double lat = getIntent().getDoubleExtra("lat", -1);
-        double lng = getIntent().getDoubleExtra("lng", -1);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));*/
-
         centerMap();
         requestData();
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -167,8 +153,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Log.e(TAG, "unknown user id");
                 }
                 //addUserDataToMarker(userIdOfMarker, marker);
-                Intent startUserProfile = new Intent(MapsActivity.this, UserProfileActivity.class);
-                startUserProfile.putExtra("userId", userIdOfMarker);
+                Intent startUserProfile = new Intent(MapsActivity.this, ProfileActivity.class);
+                startUserProfile.putExtra("userSelected", userIdOfMarker);
                 startActivity(startUserProfile);
             }
         });
@@ -203,20 +189,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    /**
-     * Access position of the current user and and use this data to center the map.
-     */
     private void centerMap() {
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
         try {
             @SuppressLint("MissingPermission") Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
             locationResult.addOnCompleteListener(this, task -> {
                 if (task.isSuccessful()) {
                     double lat, lng;
-                    if (getIntent().getExtras().containsKey("lat") && (getIntent().getExtras().containsKey("lng"))) {
+                    if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("lat") && getIntent().getExtras().containsKey("lng")) {
                         lat = getIntent().getDoubleExtra("lat", -1);
                         lng = getIntent().getDoubleExtra("lng", -1);
                         Log.e(TAG, "A");
@@ -224,11 +203,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Log.e(TAG, "B");
                         Location lastKnownLocation = task.getResult();
                         if (lastKnownLocation != null) {
-                        Log.e(TAG, "C");
+                            Log.e(TAG, "C");
                             lat = lastKnownLocation.getLatitude();
                             lng = lastKnownLocation.getLongitude();
                         } else {
-                        Log.e(TAG, "E");
+                            Log.e(TAG, "E");
                             lat = -33.8523341;
                             lng = 151.2106085;
                         }
@@ -242,34 +221,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 SecurityException e) {
             Log.e("Exception: %s", e.getMessage(), e);
         }
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
-        /*
-        try {
-            @SuppressLint("MissingPermission") Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
-            locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    if (task.isSuccessful()) {
-                        Location lastKnownLocation = task.getResult();
-                        if (lastKnownLocation != null) {
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(lastKnownLocation.getLatitude(),
-                                            lastKnownLocation.getLongitude()), 15));
-                        }
-                    } else {
-                        Log.d(TAG, "Current location is null. Using defaults.");
-                        Log.e(TAG, "Exception: %s", task.getException());
-                        mMap.moveCamera(CameraUpdateFactory
-                                .newLatLngZoom(new LatLng(-33.8523341, 151.2106085), 15));
-                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                    }
-                }
-            });
-        } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage(), e);
-        }*/
     }
 }

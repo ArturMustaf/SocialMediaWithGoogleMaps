@@ -127,23 +127,18 @@ public class MainMenuActivity extends AppCompatActivity {
         List<String> list = new ArrayList<>();
 
         for (var event : eventsList) {
-            LocalDateTime startDate = LocalDateTime.parse(event.getStartDate());
-            String startDateFormatString = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(startDate);
+            LocalDateTime start = LocalDateTime.parse(event.getStartDate());
+            String startDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(start);
+            String startTime = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(start);
 
-            LocalDateTime endDate = LocalDateTime.parse(event.getEndDate());
-            String endDateFormatString = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(endDate);
-
-            String startTime = (event.getStartTimeHour() < 10 ? "0" + event.getStartTimeHour() : event.getStartTimeHour())
-                    + ":" + (event.getStartTimeMinute() < 10 ? "0" + event.getStartTimeMinute() : event.getStartTimeMinute());
-
-            String endTime = (event.getEndTimeHour() < 10 ? "0" + event.getEndTimeHour() : event.getEndTimeHour())
-                    + ":" + (event.getEndTimeMinute() < 10 ? "0" + event.getEndTimeMinute() : event.getEndTimeMinute());
-
+            LocalDateTime end = LocalDateTime.parse(event.getEndDate());
+            String endDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(end);
+            String endTime = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(end);
 
             String listItem = "\n" + event.getName() + "\n\n"
-                    + "from: " + startDateFormatString + "   "
+                    + "from: " + startDate + "   "
                     + startTime + "\n"
-                    + "until: " + endDateFormatString + "   "
+                    + "until: " + endDate + "   "
                     + endTime + "\n\n"
                     + event.getAddress() + "\n";
             list.add(listItem);

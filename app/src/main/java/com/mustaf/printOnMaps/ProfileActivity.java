@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,7 +72,15 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void requestUser() {
-        String userId = getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", "");
+        String userId;
+        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("userSelected")) {
+            userId = getIntent().getStringExtra("userSelected");
+        }
+        else {
+            userId = getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", "");
+            findViewById(R.id.button_email).setVisibility(View.GONE);
+        }
+
         Call<User> call = apiService.getUserById(userId);
         call.enqueue(new Callback<User>() {
             @Override
