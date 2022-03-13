@@ -15,7 +15,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -133,7 +132,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
     }
 
     /**
@@ -150,7 +148,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "onmapready");
         mMap = googleMap;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        centerMapToUserPosition();
+        /*double lat = getIntent().getDoubleExtra("lat", -1);
+        double lng = getIntent().getDoubleExtra("lng", -1);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15));*/
+
+        centerMap();
         requestData();
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -188,7 +190,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     markersByUserId.get(event.getPersonId()).add(marker);
                 }
-                for (var entry: markersByUserId.entrySet()) {
+                for (var entry : markersByUserId.entrySet()) {
                     Log.d(TAG, entry.getKey() + " : " + entry.getValue());
                 }
                 Log.d(TAG, "GET request successful");
@@ -204,11 +206,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Access position of the current user and and use this data to center the map.
      */
-    private void centerMapToUserPosition() {
+    private void centerMap() {
         /*
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
          */
+        try {
+            @SuppressLint("MissingPermission") Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+            locationResult.addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    double lat, lng;
+                    if (getIntent().getExtras().containsKey("lat") && (getIntent().getExtras().containsKey("lng"))) {
+                        lat = getIntent().getDoubleExtra("lat", -1);
+                        lng = getIntent().getDoubleExtra("lng", -1);
+                        Log.e(TAG, "A");
+                    } else {
+                        Log.e(TAG, "B");
+                        Location lastKnownLocation = task.getResult();
+                        if (lastKnownLocation != null) {
+                        Log.e(TAG, "C");
+                            lat = lastKnownLocation.getLatitude();
+                            lng = lastKnownLocation.getLongitude();
+                        } else {
+                        Log.e(TAG, "E");
+                            lat = -33.8523341;
+                            lng = 151.2106085;
+                        }
+                    }
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+                            lat, lng), 15));
+                }
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+            });
+        } catch (
+                SecurityException e) {
+            Log.e("Exception: %s", e.getMessage(), e);
+        }
+        /*
+         * Get the best and most recent location of the device, which may be null in rare
+         * cases when a location is not available.
+         */
+        /*
         try {
             @SuppressLint("MissingPermission") Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
             locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
@@ -232,6 +270,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             });
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage(), e);
-        }
+        }*/
     }
 }

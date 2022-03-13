@@ -113,6 +113,7 @@ public class MainMenuActivity extends AppCompatActivity {
                 eventsList = response.body();
                 showEvents();
             }
+
             @Override
             public void onFailure(Call<List<Event>> call, Throwable throwable) {
                 Log.e(TAG, "onFailure");
@@ -125,7 +126,7 @@ public class MainMenuActivity extends AppCompatActivity {
     private void showEvents() {
         List<String> list = new ArrayList<>();
 
-        for (var event: eventsList) {
+        for (var event : eventsList) {
             LocalDateTime startDate = LocalDateTime.parse(event.getStartDate());
             String startDateFormatString = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(startDate);
 
@@ -140,22 +141,27 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
             String listItem = "\n" + event.getName() + "\n\n"
-                    + "from: "+ startDateFormatString + "   "
+                    + "from: " + startDateFormatString + "   "
                     + startTime + "\n"
-                    + "until: "+ endDateFormatString + "   "
+                    + "until: " + endDateFormatString + "   "
                     + endTime + "\n\n"
                     + event.getAddress() + "\n";
             list.add(listItem);
         }
 
-         adapter = new ArrayAdapter<>(this,
+        adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1,
-                 list);
+                list);
 
         ListView listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-
+            var event = eventsList.get(position);
+            Intent intent = new Intent(MainMenuActivity.this, MapsActivity.class);
+            intent.putExtra("lat", event.getLat());
+            intent.putExtra("lng", event.getLng());
+            // intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
         });
     }
 }
