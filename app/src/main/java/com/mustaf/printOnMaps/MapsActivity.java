@@ -171,9 +171,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 for (var event : response.body()) {
                     var latLng = new LatLng(event.getLat(), event.getLng());
                     int eventStatus = getEventStatus(event);
+                    String snippet = getEventTimeFrame(event);
                     Marker marker = mMap.addMarker(new MarkerOptions()
                             .position(latLng)
                             .title(event.getName())
+                            .snippet(snippet)
                     .icon(BitmapDescriptorFactory.defaultMarker(
                             eventStatus == 0 ? BitmapDescriptorFactory.HUE_ORANGE
                                     : eventStatus == 1 ? BitmapDescriptorFactory.HUE_GREEN
@@ -196,6 +198,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.e(TAG, throwable.toString());
             }
         });
+    }
+
+    private String getEventTimeFrame(Event event) {
+        LocalDateTime start = LocalDateTime.parse(event.getStartDate());
+        String startDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(start);
+        String startTime = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(start);
+
+        LocalDateTime end = LocalDateTime.parse(event.getEndDate());
+        String endDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(end);
+        String endTime = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(end);
+
+        return "from: " + startDate + ", "
+                + startTime + "   until: " + endDate + ", "
+                + endTime;
     }
 
     private int getEventStatus(Event event) {

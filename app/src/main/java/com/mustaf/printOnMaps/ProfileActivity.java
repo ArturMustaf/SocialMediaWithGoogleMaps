@@ -46,19 +46,23 @@ public class ProfileActivity extends AppCompatActivity {
 
         setupTabLayout();
 
-        setupMailButton();
-
         setupRetrofit();
+
         requestUser();
+
     }
 
     private void setupMailButton() {
-        ((FloatingActionButton) findViewById(R.id.button_email)).setOnClickListener(
-                view -> {
-                    startActivity(new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                            "mailto", "", null)));
-                }
-        );
+        if (findViewById(R.id.button_email).getVisibility() != View.GONE) {
+            ((FloatingActionButton) findViewById(R.id.button_email)).setOnClickListener(
+                    view -> {
+                        Intent sendMail = new Intent(Intent.ACTION_SENDTO);
+                        sendMail.setData(Uri.parse("mailto:")); // only email apps should handle this
+                        sendMail.putExtra(Intent.EXTRA_EMAIL, new String[] { user.getEmail() });
+                        startActivity(sendMail);
+                    }
+            );
+        }
     }
 
     private void setupRetrofit() {
@@ -75,8 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
         String userId;
         if (getIntent().getExtras() != null
                 && getIntent().getExtras().containsKey("userSelected")
-                && !getIntent().getStringExtra("userSelected").equals(getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", "")))
-        {
+                && !getIntent().getStringExtra("userSelected").equals(getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", ""))) {
             userId = getIntent().getStringExtra("userSelected");
         } else {
             userId = getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", "");
@@ -89,6 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 user = response.body();
                 fillUserDetails();
+                setupMailButton();
                 Log.d(TAG, "GET user request successful");
             }
 
