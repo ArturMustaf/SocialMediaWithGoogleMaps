@@ -15,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -27,6 +28,9 @@ import com.mustaf.printOnMaps.model.User;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -127,7 +131,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         setupTabLayout();
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -167,9 +170,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
                 for (var event : response.body()) {
                     var latLng = new LatLng(event.getLat(), event.getLng());
+                    int eventStatus = getEventStatus(event);
                     Marker marker = mMap.addMarker(new MarkerOptions()
                             .position(latLng)
-                            .title(event.getName()));
+                            .title(event.getName())
+                    .icon(BitmapDescriptorFactory.defaultMarker(
+                            eventStatus == 0 ? BitmapDescriptorFactory.HUE_ORANGE
+                                    : eventStatus == 1 ? BitmapDescriptorFactory.HUE_GREEN
+                                    : BitmapDescriptorFactory.HUE_AZURE
+                    )));
                     var markers = markersByUserId.get(event.getPersonId());
                     if (markers == null) {
                         markersByUserId.put(event.getPersonId(), new ArrayList<>());
@@ -187,6 +196,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.e(TAG, throwable.toString());
             }
         });
+    }
+
+    private int getEventStatus(Event event) {
+        LocalDateTime start = LocalDateTime.parse(event.getStartDate());
+        LocalDateTime end = LocalDateTime.parse(event.getEndDate());
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(start)) {
+            if (now.isAfter(end)) {
+                //is over
+                return 0;
+            }
+            else {
+                //active
+                return 1;
+            }
+        }
+        else {
+            //didn't start yet
+            return 2;
+        }
     }
 
     private void centerMap() {

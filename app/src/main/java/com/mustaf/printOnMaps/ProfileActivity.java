@@ -73,10 +73,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void requestUser() {
         String userId;
-        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("userSelected")) {
+        if (getIntent().getExtras() != null
+                && getIntent().getExtras().containsKey("userSelected")
+                && !getIntent().getStringExtra("userSelected").equals(getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", "")))
+        {
             userId = getIntent().getStringExtra("userSelected");
-        }
-        else {
+        } else {
             userId = getSharedPreferences("userData", Context.MODE_PRIVATE).getString("personId", "");
             findViewById(R.id.button_email).setVisibility(View.GONE);
         }

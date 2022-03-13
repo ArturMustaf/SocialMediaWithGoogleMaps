@@ -140,7 +140,7 @@ public class NewEventActivity extends AppCompatActivity {
                     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     calendar.setTimeInMillis((long) selection);
                     ((TextView) findViewById(R.id.show_selected_start_date)).setText(materialDatePicker.getHeaderText());
-                    startDate = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_WEEK)).toString();
+                    startDate = LocalDateTime.ofInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId()).toLocalDate().toString();
                 });
     }
 
@@ -173,7 +173,7 @@ public class NewEventActivity extends AppCompatActivity {
                     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     calendar.setTimeInMillis((long) selection);
                     ((TextView) findViewById(R.id.show_selected_end_date)).setText(materialDatePicker.getHeaderText());
-                    endDate = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_WEEK)).toString();
+                    endDate = LocalDateTime.ofInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId()).toLocalDate().toString();
                 });
     }
 
