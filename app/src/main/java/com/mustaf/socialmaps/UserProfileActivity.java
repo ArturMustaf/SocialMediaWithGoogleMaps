@@ -1,4 +1,4 @@
-package com.mustaf.printOnMaps;
+package com.mustaf.socialmaps;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,9 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.mustaf.printOnMaps.model.User;
+import com.mustaf.socialmaps.model.User;
 
-import lombok.var;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

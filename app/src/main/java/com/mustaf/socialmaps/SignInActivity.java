@@ -1,4 +1,4 @@
-package com.mustaf.printOnMaps;
+package com.mustaf.socialmaps;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,13 +15,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
-import com.mustaf.printOnMaps.model.Event;
-import com.mustaf.printOnMaps.model.User;
-
-import java.util.List;
+import com.mustaf.socialmaps.model.User;
 
 import lombok.var;
 import retrofit2.Call;

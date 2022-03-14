@@ -1,4 +1,4 @@
-package com.mustaf.printOnMaps
+package com.mustaf.socialmaps
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.mustaf.printOnMaps;
+package com.mustaf.socialmaps;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -19,12 +19,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
-import com.mustaf.printOnMaps.databinding.ActivityMapsBinding;
-import com.mustaf.printOnMaps.model.Event;
-import com.mustaf.printOnMaps.model.User;
+import com.mustaf.socialmaps.databinding.ActivityMapsBinding;
+import com.mustaf.socialmaps.model.Event;
+import com.mustaf.socialmaps.model.User;
 
 import org.jetbrains.annotations.NotNull;
 

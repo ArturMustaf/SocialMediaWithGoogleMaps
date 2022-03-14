@@ -1,6 +1,5 @@
-package com.mustaf.printOnMaps;
+package com.mustaf.socialmaps;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,16 +17,13 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
-import com.mustaf.printOnMaps.model.Event;
+import com.mustaf.socialmaps.model.Event;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -37,15 +32,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import lombok.val;
 import lombok.var;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static com.mustaf.printOnMaps.MainMenuActivity.retrofit;
 
 public class NewEventActivity extends AppCompatActivity {
 
@@ -226,8 +218,8 @@ public class NewEventActivity extends AppCompatActivity {
         //return;
         //}
 
-        if (retrofit == null) {
-            retrofit = new Retrofit.Builder()
+        if (MainMenuActivity.retrofit == null) {
+            MainMenuActivity.retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
@@ -236,7 +228,7 @@ public class NewEventActivity extends AppCompatActivity {
         Event event = createEventFromForm();
 
         // below line is to create an instance for our retrofit api class.
-        ApiService apiService = retrofit.create(ApiService.class);
+        ApiService apiService = MainMenuActivity.retrofit.create(ApiService.class);
 
         // calling a method to create a post and passing our modal class.
         Call<Event> call = apiService.createEvent(event);

@@ -1,4 +1,4 @@
-package com.mustaf.printOnMaps.model;
+package com.mustaf.socialmaps.model;
 
 import android.content.Context;
 

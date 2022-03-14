@@ -1,8 +1,7 @@
-package com.mustaf.printOnMaps;
+package com.mustaf.socialmaps;
 
-import com.mustaf.printOnMaps.model.Event;
-import com.mustaf.printOnMaps.model.PrintProject;
-import com.mustaf.printOnMaps.model.User;
+import com.mustaf.socialmaps.model.Event;
+import com.mustaf.socialmaps.model.User;
 
 import java.util.List;
 

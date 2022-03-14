@@ -1,4 +1,4 @@
-package com.mustaf.printOnMaps;
+package com.mustaf.socialmaps;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,11 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.mustaf.printOnMaps.model.User;
+import com.mustaf.socialmaps.model.User;
 import com.squareup.picasso.Picasso;
 
 import lombok.var;
